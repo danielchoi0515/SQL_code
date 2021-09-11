@@ -1,11 +1,19 @@
+
 #SQL queries used to clean and aggregate data
 #Syntax Used: UPDATE, ALTER, DELETE, GROUP BY, JOIN, UPDATE with JOIN, CTE
 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #Drop unused column 
+
 ALTER TABLE spotify_dataset_cleaned
 DROP COLUMN SONG_ID;
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #Check for duplicates
+
 WITH temp_table AS(
 	SELECT
 		*,
@@ -21,19 +29,27 @@ FROM
 WHERE
 	duplicate_check = 2;
 
-#Remove duplicate row
+
+#Remove the duplicate row
+
 DELETE FROM 
 	spotify_dataset_cleaned
 WHERE
 	Song="Goodbyes (Feat. Young Thug)" AND Highest_Charting_Position = 54 AND Number_of_Times_Charted = 22;
     
-#Populate Genre
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Populate Genres that are missing
+
 UPDATE spotify_dataset_cleaned a
 JOIN spotify_dataset_cleaned b ON a.Artist = b.Artist
 SET a.Genre = b.Genre
 WHERE a.Genre="[]" AND a.Genre != b.Genre;
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #Manually input Genre
+
 UPDATE
 	spotify_dataset_cleaned
 SET
@@ -41,7 +57,10 @@ SET
 WHERE
 	Artist = "The Beach Boys";
     
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #Make genres consistent
+
 WITH temp_table AS(
 	SELECT
 		Genre,
@@ -83,7 +102,10 @@ WITH temp_table AS(
 		spotify_dataset_cleaned
 )
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #Update table with new Genres
+
 UPDATE
 	spotify_dataset_cleaned a
 JOIN
@@ -92,8 +114,11 @@ SET
 	a.Genre=t.Grouped_genre
 WHERE
 	a.Genre != t.Grouped_genre;
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 
 #Average number of streams for highest chart rated
+
 SELECT
 	Highest_Charting_Position, ROUND(AVG(Streams),0) AS number_of_streams
 FROM
@@ -102,8 +127,11 @@ GROUP BY
 	Highest_Charting_Position 
 ORDER BY
 	Highest_Charting_Position;
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 
 #Genres and avg popularity
+
 SELECT
 	Genre, AVG(Popularity)
 FROM
@@ -111,7 +139,10 @@ FROM
 GROUP BY
 	Genre;
 	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+	
 #Week that had the most streams for each genre
+
 WITH temp_table AS(
 	SELECT 
 		Genre, Week_of_Highest_Charting, MAX(Streams) AS streams,
@@ -122,7 +153,7 @@ WITH temp_table AS(
 		Genre, Week_of_Highest_Charting
  )
  
- SELECT
+SELECT
 	*
 FROM
 	temp_table
@@ -131,4 +162,4 @@ WHERE
 ORDER BY
 	Week_of_Highest_Charting
 
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------------

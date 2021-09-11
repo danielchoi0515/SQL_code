@@ -138,7 +138,7 @@ ORDER BY
 #Genres and avg popularity
 
 SELECT
-	Genre, AVG(Popularity)
+	Genre, ROUND(AVG(Popularity),0)
 FROM
 	spotify_dataset_cleaned
 GROUP BY

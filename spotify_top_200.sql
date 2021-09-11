@@ -159,7 +159,7 @@ WITH temp_table AS(
  )
  
 SELECT
-	*
+	Genre, Week_of_Highest_Charting, streams
 FROM
 	temp_table
 WHERE

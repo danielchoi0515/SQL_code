@@ -7,8 +7,10 @@
 
 #Drop unused column 
 
-ALTER TABLE spotify_dataset_cleaned
-DROP COLUMN SONG_ID;
+ALTER TABLE 
+	spotify_dataset_cleaned
+DROP 
+	COLUMN SONG_ID;
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -41,10 +43,13 @@ WHERE
 
 #Populate Genres that are missing
 
-UPDATE spotify_dataset_cleaned a
+UPDATE 
+	spotify_dataset_cleaned a
 JOIN spotify_dataset_cleaned b ON a.Artist = b.Artist
-SET a.Genre = b.Genre
-WHERE a.Genre="[]" AND a.Genre != b.Genre;
+SET 
+	a.Genre = b.Genre
+WHERE 
+	a.Genre="[]" AND a.Genre != b.Genre;
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -146,7 +151,7 @@ GROUP BY
 WITH temp_table AS(
 	SELECT 
 		Genre, Week_of_Highest_Charting, MAX(Streams) AS streams,
-        ROW_NUMBER() OVER(PARTITION BY Genre ORDER BY MAX(Streams) DESC) AS ranking
+        	ROW_NUMBER() OVER(PARTITION BY Genre ORDER BY MAX(Streams) DESC) AS ranking
 	FROM
 		spotify_dataset_cleaned
 	GROUP BY

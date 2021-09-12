@@ -168,3 +168,26 @@ ORDER BY
 	Week_of_Highest_Charting
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Finding week and song with lowest streams
+
+WITH temp_table AS(
+	SELECT 
+		Highest_Charting_Position, Song, Release_Date, Streams,
+        ROW_NUMBER() OVER(PARTITION BY Highest_Charting_Position ORDER BY Streams ASC) AS ranking 
+	FROM
+		spotify_dataset_cleaned
+	GROUP BY
+		Highest_Charting_Position, Song, Release_Date, Streams
+	ORDER BY
+		Highest_Charting_Position, ranking
+)
+
+SELECT 
+	*
+FROM
+	temp_table
+WHERE 
+	ranking = 1
+ORDER BY
+	 Release_Date

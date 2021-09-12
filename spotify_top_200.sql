@@ -45,7 +45,8 @@ WHERE
 
 UPDATE 
 	spotify_dataset_cleaned a
-JOIN spotify_dataset_cleaned b ON a.Artist = b.Artist
+JOIN 
+	spotify_dataset_cleaned b ON a.Artist = b.Artist
 SET 
 	a.Genre = b.Genre
 WHERE 
